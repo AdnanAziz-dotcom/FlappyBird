@@ -75,10 +75,6 @@ public class Bird : MonoBehaviour
     {
         if (!passedObstacle)
         {
-            //if (collision.gameObject.CompareTag("Pipe"))
-            //{
-            //    collision.gameObject.GetComponent<Pipe>().FirstPipe();
-            //}
             state = State.Dead;
             StartCoroutine(WaitandReload());
             return;
@@ -100,7 +96,6 @@ public class Bird : MonoBehaviour
 
     IEnumerator WaitandFinish()
     {
-
         EventsHandler.OnDead?.Invoke();
         animator.SetTrigger("Hit");
         yield return new WaitForSeconds(1.5f);
