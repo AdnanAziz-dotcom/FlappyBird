@@ -65,7 +65,7 @@ public class Bird : MonoBehaviour
     private void PassObstacle() => passedObstacle = true;
     private void ResetBird()
     {
-        transform.position = resetPosition;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
     private void Jump()
     {
@@ -75,17 +75,27 @@ public class Bird : MonoBehaviour
     {
         if (!passedObstacle)
         {
-            if (collision.gameObject.CompareTag("Pipe"))
-            {
-                collision.gameObject.GetComponent<Pipe>().FirstPipe();
-            }
-            ResetBird();
+            //if (collision.gameObject.CompareTag("Pipe"))
+            //{
+            //    collision.gameObject.GetComponent<Pipe>().FirstPipe();
+            //}
+            state = State.Dead;
+            StartCoroutine(WaitandReload());
             return;
         }
         if (state == State.Dead) return;
         Instantiate(hitEffect,transform.position, hitEffect.transform.rotation, transform);
         state = State.Dead;
         StartCoroutine(WaitandFinish());
+    }
+
+    IEnumerator WaitandReload()
+    {
+
+        EventsHandler.OnDead?.Invoke();
+        animator.SetTrigger("Hit");
+        yield return new WaitForSeconds(1.5f);
+        ResetBird();
     }
 
     IEnumerator WaitandFinish()

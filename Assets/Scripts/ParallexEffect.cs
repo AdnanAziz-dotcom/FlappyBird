@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ParallexEffect : MonoBehaviour
 {
-    [SerializeField] bool usePipeSpeed = false;
+    [SerializeField] bool moveWithPipes = false;
     Difficulty difficulty;
     [SerializeField] float moveSpeed = 1f;
     [SerializeField] Transform[] backgrounds;
@@ -53,7 +53,7 @@ public class ParallexEffect : MonoBehaviour
 
     private void SetSpeed()
     {
-        if(usePipeSpeed)
+        if(moveWithPipes)
         {
             if (difficulty != null)
             {
@@ -64,7 +64,6 @@ public class ParallexEffect : MonoBehaviour
                 difficulty = FindAnyObjectByType<GameManager>().GetDifficulty();
                 moveSpeed = difficulty.pipeSpeed;
             }
-         //   Debug.Log("Parallex Speedddd  " + moveSpeed);
         }
     }
 }
