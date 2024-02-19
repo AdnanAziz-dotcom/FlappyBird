@@ -11,13 +11,13 @@ public class BGMovement : MonoBehaviour
 
     private void OnEnable()
     {
-        EventsHandler.OnGameStart += StartGame;
-        EventsHandler.OnDead += GameOver;
+        EventsHandler.GameStartEvent += StartGame;
+        EventsHandler.DeadEvent += GameOver;
     }
     private void OnDisable()
     {
-        EventsHandler.OnGameStart -= StartGame;
-        EventsHandler.OnDead -= GameOver;
+        EventsHandler.GameStartEvent -= StartGame;
+        EventsHandler.DeadEvent -= GameOver;
     }
     private void StartGame()
     {

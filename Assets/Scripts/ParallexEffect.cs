@@ -11,17 +11,17 @@ public class ParallexEffect : MonoBehaviour
     bool move = false;
     private void OnEnable()
     {
-       EventsHandler.OnGameStart += StartMoving;
-        EventsHandler.OnDead += StopMoving;
+       EventsHandler.GameStartEvent += OnStartMoving;
+        EventsHandler.DeadEvent += OnStopMoving;
     }
     private void OnDisable()
     {
-        EventsHandler.OnGameStart -= StartMoving;
-        EventsHandler.OnDead -= StopMoving;
+        EventsHandler.GameStartEvent -= OnStartMoving;
+        EventsHandler.DeadEvent -= OnStopMoving;
     }
-    private void StopMoving()=> move = false;
+    private void OnStopMoving()=> move = false;
 
-    private void StartMoving()=> move = true;
+    private void OnStartMoving()=> move = true;
 
     
     private void Start()

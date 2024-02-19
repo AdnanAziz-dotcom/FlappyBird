@@ -46,13 +46,13 @@ public class DifficultyController : MonoBehaviour
 
     private void OnEnable()
     {
-        EventsHandler.OnSetDifficulty += SetDifficultyParameters;
-        EventsHandler.OnGetUpdatedDifficulty += UpdateDifficulty;
+        EventsHandler.SetDifficultyEvent += SetDifficultyParameters;
+        EventsHandler.GetUpdatedDifficultyEvent += UpdateDifficulty;
     }
     private void OnDisable()
     {
-        EventsHandler.OnSetDifficulty -= SetDifficultyParameters;
-        EventsHandler.OnGetUpdatedDifficulty -= UpdateDifficulty;
+        EventsHandler.SetDifficultyEvent -= SetDifficultyParameters;
+        EventsHandler.GetUpdatedDifficultyEvent -= UpdateDifficulty;
     }
 
     private Difficulty SetDifficultyParameters(float averageScore)

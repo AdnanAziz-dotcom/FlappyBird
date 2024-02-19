@@ -1,75 +1,53 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+using static EventsHandler;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] Pipe[] pipePrefabs;
-    [SerializeField] GameObject mainMenu;
-    [SerializeField] GameObject gameOverScreen;
-    [SerializeField] Button restartButton;
-    [SerializeField] Button exitButton;
-    [SerializeField] Button resetButton;
     Difficulty currentDifficulty = null;
     bool gameOver = false;
+    GameSessionData gameSessionData;
 
     private void Awake()
     {
-        SetUpUI();
         SetUpGame();
     }
 
-    private void SetUpUI()
-    {
-        mainMenu.SetActive(true);
-        gameOverScreen.SetActive(false);
-        restartButton.onClick.RemoveAllListeners();
-        resetButton.onClick.RemoveAllListeners();
-        resetButton.onClick.AddListener(() =>
-        {
-            PlayerData.ResetPlayerData();
-            DataExporter.DeleteData();
-            SceneManager.LoadScene(0);
-        });
-        restartButton.onClick.AddListener(() => SceneManager.LoadScene(0));
-        exitButton.onClick.AddListener(() => Application.Quit());
-    }
 
     private void SetUpGame()
     {
-        currentDifficulty = EventsHandler.OnSetDifficulty?.Invoke(PlayerData.GetAverageScore());
+        currentDifficulty = EventsHandler.SetDifficultyEvent?.Invoke(PlayerData.GetAverageScore());
     }
 
     private void OnEnable()
     {
-        EventsHandler.OnGameStart += StartGame;
-        EventsHandler.OnDead += OnDead;
-        EventsHandler.OnGetUpdatedScore += UpdateDifficulty;
-        EventsHandler.OnGameOver += OnGameOver;
+        GameStartEvent += OnStartGame;
+        DeadEvent += OnDead;
+        GetUpdatedScoreEvent += OnUpdateDifficulty;
+        GameSessionDataEvent += OnGameSessionData;
     }
 
     private void OnDisable()
     {
-        EventsHandler.OnGameStart -= StartGame;
-        EventsHandler.OnDead -= OnDead;
-        EventsHandler.OnGetUpdatedScore -= UpdateDifficulty;
-        EventsHandler.OnGameOver -= OnGameOver;
+        GameStartEvent -= OnStartGame;
+        DeadEvent -= OnDead;
+        GetUpdatedScoreEvent -= OnUpdateDifficulty;
+        GameSessionDataEvent -= OnGameSessionData;
     }
-    public void StartGame()
+    private void OnGameSessionData(GameSessionData gameSessionData)
     {
-        mainMenu.SetActive(false);
+        this.gameSessionData = gameSessionData;
+    }
+    public void OnStartGame()
+    {
         StartCoroutine(SpawnPipes());
     }
 
     public void OnDead()
     {
         gameOver = true;
-    }
-    void OnGameOver()
-    {
-        gameOverScreen.SetActive(true);
     }
     public Difficulty GetDifficulty() => currentDifficulty;
 
@@ -99,10 +77,10 @@ public class GameManager : MonoBehaviour
             return new Vector2(100, UnityEngine.Random.Range(range.min, range.max));
         }
     }
-    private void UpdateDifficulty(float score)
+    private void OnUpdateDifficulty(float score)
     {
         DebugLog(currentDifficulty, "Original Difficulty");
-        EventsHandler.OnGetUpdatedDifficulty?.Invoke(currentDifficulty);
+        GetUpdatedDifficultyEvent?.Invoke(currentDifficulty);
         DebugLog(currentDifficulty, "Changed Difficulty");
     }
     void DebugLog(Difficulty currentDifficulty, string msg)

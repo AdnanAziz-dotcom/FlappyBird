@@ -31,11 +31,11 @@ public class Bird : MonoBehaviour
     }
     private void OnEnable()
     {
-        EventsHandler.OnScoreUpdate += PassObstacle;
+        EventsHandler.ScoreUpdateEvent += OnPassObstacle;
     }
     private void OnDisable()
     {
-        EventsHandler.OnScoreUpdate -= PassObstacle;
+        EventsHandler.ScoreUpdateEvent -= OnPassObstacle;
     }
     private void Update()
     {
@@ -44,7 +44,7 @@ public class Bird : MonoBehaviour
             case State.WaitingToPlay:
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    EventsHandler.OnGameStart?.Invoke();
+                    EventsHandler.GameStartEvent?.Invoke();
                     state = State.Playing;
                     rb.bodyType = RigidbodyType2D.Dynamic;
                     Jump();
@@ -62,7 +62,7 @@ public class Bird : MonoBehaviour
         }
     }
 
-    private void PassObstacle() => passedObstacle = true;
+    private void OnPassObstacle() => passedObstacle = true;
     private void ResetBird()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
@@ -88,7 +88,7 @@ public class Bird : MonoBehaviour
     IEnumerator WaitandReload()
     {
 
-        EventsHandler.OnDead?.Invoke();
+        EventsHandler.DeadEvent?.Invoke();
         animator.SetTrigger("Hit");
         yield return new WaitForSeconds(1.5f);
         ResetBird();
@@ -96,10 +96,10 @@ public class Bird : MonoBehaviour
 
     IEnumerator WaitandFinish()
     {
-        EventsHandler.OnDead?.Invoke();
+        EventsHandler.DeadEvent?.Invoke();
         animator.SetTrigger("Hit");
         yield return new WaitForSeconds(1.5f);
-        EventsHandler.OnGameOver?.Invoke();
+        EventsHandler.GameOverEvent?.Invoke();
     }
 
 }

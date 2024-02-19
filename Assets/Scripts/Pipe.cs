@@ -15,11 +15,11 @@ public class Pipe : MonoBehaviour
 
     private void OnEnable()
     {
-        EventsHandler.OnDead += GameOver;
+        EventsHandler.DeadEvent += GameOver;
     }
     private void OnDisable()
     {
-        EventsHandler.OnDead -= GameOver;
+        EventsHandler.DeadEvent -= GameOver;
     }
     void GameOver() => isGameOver = true;
     
@@ -30,7 +30,7 @@ public class Pipe : MonoBehaviour
         if (transform.position.x < 0 && !scoreUpdated)
         {
             scoreUpdated = true;
-            EventsHandler.OnScoreUpdate?.Invoke();
+            EventsHandler.ScoreUpdateEvent?.Invoke();
         }
         if (transform.position.x < -100)
         {
@@ -41,7 +41,7 @@ public class Pipe : MonoBehaviour
     public void FirstPipe()
     {
         scoreUpdated = true;
-        EventsHandler.OnScoreUpdate?.Invoke();
+        EventsHandler.ScoreUpdateEvent?.Invoke();
         Destroy(this.gameObject);
     }
 }

@@ -25,15 +25,15 @@ public class ScoreSystem : MonoBehaviour
     }
     private void OnEnable()
     {
-        EventsHandler.OnDead += SetScore;
-        EventsHandler.OnScoreUpdate += UpdateScore;
-        EventsHandler.OnGameStart += StartGame;
+        EventsHandler.DeadEvent += SetScore;
+        EventsHandler.ScoreUpdateEvent += UpdateScore;
+        EventsHandler.GameStartEvent += StartGame;
     }
     private void OnDisable()
     {
-        EventsHandler.OnDead -= SetScore;
-        EventsHandler.OnScoreUpdate -= UpdateScore;
-        EventsHandler.OnGameStart -= StartGame;
+        EventsHandler.DeadEvent -= SetScore;
+        EventsHandler.ScoreUpdateEvent -= UpdateScore;
+        EventsHandler.GameStartEvent -= StartGame;
     }
 
     private void UpdateScore()
@@ -41,7 +41,7 @@ public class ScoreSystem : MonoBehaviour
         score++;
         scoreText.text = score.ToString();
         finalScoreText.text = score.ToString();
-        EventsHandler.OnGetUpdatedScore?.Invoke(score);
+        EventsHandler.GetUpdatedScoreEvent?.Invoke(score);
     }
     
     private void SetScore()
