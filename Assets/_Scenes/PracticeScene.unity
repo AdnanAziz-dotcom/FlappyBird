@@ -385,6 +385,8 @@ MonoBehaviour:
   freePlayIcon: {fileID: 52662621}
   insertCreditsIcon: {fileID: 1099693378}
   startScreenObjects: {fileID: 1789555113}
+  startScreenLogo: {fileID: 51657177}
+  startScreenInstruction: {fileID: 1388031507}
   gameOverScreen: {fileID: 243442340}
   restartButton: {fileID: 1239726505}
   exitButton: {fileID: 1723561253}
@@ -757,7 +759,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &180741642
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1960,7 +1962,7 @@ MonoBehaviour:
   minSpawnSpeed: 2.3
   maxSpawnSpeed: 0.8
   pipeSpeedDefault: 20
-  spawnIntervalDefault: 2
+  spawnIntervalDefault: 2.8
 --- !u!4 &410894633
 Transform:
   m_ObjectHideFlags: 0
@@ -9735,7 +9737,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1789555114
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9768,7 +9770,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1789555113}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: ec51f6396e44d234b9bd23704e692bbb, type: 2}
   m_CullingMode: 0
@@ -12749,6 +12751,10 @@ PrefabInstance:
       propertyPath: hitEffect
       value: 
       objectReference: {fileID: 513556414304675147, guid: 180f8180d7b97914c9c7e0f1e28bc821, type: 3}
+    - target: {fileID: 3494703269589723584, guid: 44190163cc07a1547bdf15a45e4be425, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4428189298014895987, guid: 44190163cc07a1547bdf15a45e4be425, type: 3}
       propertyPath: m_LocalScale.x
       value: 7

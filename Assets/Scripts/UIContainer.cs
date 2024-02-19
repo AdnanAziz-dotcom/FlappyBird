@@ -17,8 +17,11 @@ public class UIContainer : MonoBehaviour
     [SerializeField] TextMeshProUGUI bonusTicketsText;
     [SerializeField] GameObject freePlayIcon;
     [SerializeField] GameObject insertCreditsIcon;
+
     [Header("Start Screen - Start Screen")]
     [SerializeField] GameObject startScreenObjects;
+    [SerializeField] GameObject startScreenLogo;
+    [SerializeField] GameObject startScreenInstruction;
 
     [Header("Game Over Screen")]
     [SerializeField] GameObject gameOverScreen;
@@ -30,19 +33,27 @@ public class UIContainer : MonoBehaviour
     [SerializeField] GameObject operatorScreen;
 
     GameSessionData gameSessionData;
-
-    
-
+    enum GameStates
+    {
+        OperatorMenu,
+        PrePlay,
+        StartScreen,
+        ReadyToPlay,
+        Playing,
+        GameOver,
+        CreditScreen
+    }
+    GameStates gameState;
+    private void Awake() => AssignListeners();
     private void OnEnable()
     {
-        GameStartEvent += OnStartGame;
+        DeadEvent += OnBirdDead;
         GameOverEvent += OnGameOver;
         GameSessionDataEvent += OnGameSessionData;
     }
-
     private void OnDisable()
     {
-        GameStartEvent -= OnStartGame;
+        DeadEvent -= OnBirdDead;
         GameOverEvent -= OnGameOver;
         GameSessionDataEvent -= OnGameSessionData;
     }
@@ -50,55 +61,106 @@ public class UIContainer : MonoBehaviour
     {
         this.gameSessionData = gameSessionData;
         SetUpUI();
-        Debug.Log("Bonus Tickets: " + gameSessionData.bonusTickets);
-        Debug.Log("Average Payout: " + gameSessionData.avgPayout);
-        Debug.Log("Minimum Tickets: " + gameSessionData.minTickets);
-        Debug.Log("Per Ticket Value: " + gameSessionData.perTicketValue);
-        Debug.Log("Credits Per Game: " + gameSessionData.creditsPerGame);
-        Debug.Log("Free Play Mode: " + gameSessionData.freePlayMode);
-        Debug.Log("Ticket Redemption Mode: " + gameSessionData.ticketRedemptionMode);
-        Debug.Log("Enable Retry: " + gameSessionData.enableRetry);
-        Debug.Log("Attract Volume: " + gameSessionData.attractVolume);
-        Debug.Log("Game Volume: " + gameSessionData.gameVolume);
-
     }
     private void SetUpUI()
     {
-        AssignListeners();
-        operatorScreen.SetActive(false);
-        startScreen.SetActive(true);
-        prePlayObjects.SetActive(true);
-        if (gameSessionData.ticketRedemptionMode)
-        {
-            bonusTicketsIcon.SetActive(true);
-            logo.SetActive(false);
-            bonusTicketsText.text = gameSessionData.bonusTickets.ToString();
-        }
-        else
-        {
-            bonusTicketsIcon.SetActive(false);
-            logo.SetActive(true);
-        }
-
-        if (gameSessionData.freePlayMode)
-        {
-            freePlayIcon.SetActive(true);
-            insertCreditsIcon.SetActive(false);
-        }
-        else
-        {
-            freePlayIcon.SetActive(false);
-            insertCreditsIcon.SetActive(true);
-        }
+        ActivateUI(GameStates.PrePlay);
+        freePlayIcon.SetActive(gameSessionData.freePlayMode);
+        insertCreditsIcon.SetActive(!gameSessionData.freePlayMode);
+        bonusTicketsIcon.SetActive(gameSessionData.ticketRedemptionMode);
+        logo.SetActive(!gameSessionData.ticketRedemptionMode);
+        bonusTicketsText.text = gameSessionData.bonusTickets.ToString();
+        
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.O))
+
+        if (gameState == GameStates.Playing) return;
+
+        if (gameState == GameStates.PrePlay && Input.GetKeyDown(KeyCode.O))
+        {
+            ActivateUI(GameStates.OperatorMenu);
+        }
+
+        if (gameSessionData.freePlayMode)
+        {
+            if (gameState == GameStates.PrePlay && Input.anyKeyDown)
+            {
+                ActivateUI(GameStates.StartScreen);
+            }
+            else if (gameState == GameStates.StartScreen && Input.GetKeyDown(KeyCode.Space))
+            {
+                StartCoroutine(StartGame());
+            }
+        }
+        else
+        {
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                //Open Credit Screen
+            }
+        }
+
+    }
+
+    IEnumerator StartGame()
+    {
+        ActivateUI(GameStates.ReadyToPlay);
+        startScreenObjects.GetComponent<Animator>().enabled = true;
+        yield return new WaitForSeconds(3);
+        startScreenObjects.GetComponent<Animator>().enabled = false;
+        ActivateUI(GameStates.Playing);
+        GameStartEvent?.Invoke();
+    }
+
+    private void ActivateUI(GameStates gm)
+    {
+        gameState = gm;
+        if (gm == GameStates.OperatorMenu)
         {
             operatorScreen.SetActive(true);
             startScreen.SetActive(false);
-
+            gameOverScreen.SetActive(false);
+        }
+        else if (gm == GameStates.PrePlay)
+        {
+            operatorScreen.SetActive(false);
+            startScreen.SetActive(true);
+            gameOverScreen.SetActive(false);
+            prePlayObjects.SetActive(true);
+            startScreenObjects.SetActive(false);
+        }
+        else if (gm == GameStates.StartScreen)
+        {
+            operatorScreen.SetActive(false);
+            startScreen.SetActive(true);
+            gameOverScreen.SetActive(false);
+            prePlayObjects.SetActive(false);
+            startScreenObjects.SetActive(true);
+        }
+        else if (gm == GameStates.ReadyToPlay)
+        {
+            operatorScreen.SetActive(false);
+            startScreen.SetActive(true);
+            gameOverScreen.SetActive(false);
+            startScreenLogo.SetActive(false);
+            startScreenObjects.SetActive(true);
+            startScreenInstruction.SetActive(false);
+        }
+        else if (gm == GameStates.Playing)
+        {
+            operatorScreen.SetActive(false);
+            startScreen.SetActive(false);
+            gameOverScreen.SetActive(false);
+            startScreenObjects.SetActive(true);
+            startScreenInstruction.SetActive(true);
+        }
+        else if (gm == GameStates.GameOver)
+        {
+            operatorScreen.SetActive(false);
+            startScreen.SetActive(false);
+            gameOverScreen.SetActive(true);
         }
     }
     private void AssignListeners()
@@ -116,12 +178,12 @@ public class UIContainer : MonoBehaviour
         exitButton.onClick.AddListener(() => Application.Quit());
     }
 
-    private void OnStartGame()
+    private void OnBirdDead()
     {
-        startScreen.SetActive(false);
+        // isPlaying = false;
     }
     private void OnGameOver()
     {
-        gameOverScreen.SetActive(true);
+       ActivateUI(GameStates.GameOver);
     }
 }

@@ -10,7 +10,7 @@ public class Bird : MonoBehaviour
     [SerializeField] GameObject hitEffect;
     private Rigidbody2D rb;
     private State state;
-     Vector3 resetPosition;
+    Vector3 resetPosition;
     bool passedObstacle = false;
     Animator animator;
     public enum State
@@ -32,10 +32,20 @@ public class Bird : MonoBehaviour
     private void OnEnable()
     {
         EventsHandler.ScoreUpdateEvent += OnPassObstacle;
+        EventsHandler.GameStartEvent += OnGameStart;
     }
     private void OnDisable()
     {
         EventsHandler.ScoreUpdateEvent -= OnPassObstacle;
+        EventsHandler.GameStartEvent -= OnGameStart;
+    }
+
+    void OnGameStart()
+    {
+        state = State.Playing;
+        rb.bodyType = RigidbodyType2D.Dynamic;
+        Jump();
+        animator.SetTrigger("Fly");
     }
     private void Update()
     {
@@ -44,11 +54,8 @@ public class Bird : MonoBehaviour
             case State.WaitingToPlay:
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    EventsHandler.GameStartEvent?.Invoke();
-                    state = State.Playing;
-                    rb.bodyType = RigidbodyType2D.Dynamic;
-                    Jump();
-                    animator.SetTrigger("Fly");
+                    //EventsHandler.GameStartEvent?.Invoke();
+                    //OnGameStart();
                 }
                 break;
             case State.Playing:
@@ -80,7 +87,7 @@ public class Bird : MonoBehaviour
             return;
         }
         if (state == State.Dead) return;
-        Instantiate(hitEffect,transform.position, hitEffect.transform.rotation, transform);
+        Instantiate(hitEffect, transform.position, hitEffect.transform.rotation, transform);
         state = State.Dead;
         StartCoroutine(WaitandFinish());
     }
