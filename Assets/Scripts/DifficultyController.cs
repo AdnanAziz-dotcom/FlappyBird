@@ -206,6 +206,9 @@ public class Range
 public class PlayerData
 {
     // Score and Total Games Data
+    public static int GetRetryCount() => PlayerPrefs.GetInt("Retry", 0);
+    public static void AddRetryCount() => PlayerPrefs.SetInt("Retry", PlayerPrefs.GetInt("Retry", 0) + 1);
+    public static void ResetRetryCount() => PlayerPrefs.SetInt("Retry", 0);
     public static void SetPlayerScore(float score) => PlayerPrefs.SetFloat("Score", PlayerPrefs.GetFloat("Score", 0) + score);
     public static float GetPlayerScore() => PlayerPrefs.GetFloat("Score", 0);
     public static void SetPlayerGames() => PlayerPrefs.SetInt("Games", PlayerPrefs.GetInt("Games", 0) + 1);

@@ -25,7 +25,6 @@ public class UIContainer : MonoBehaviour
 
     [Header("Game Over Screen")]
     [SerializeField] GameObject gameOverScreen;
-    [SerializeField] Button restartButton;
     [SerializeField] Button exitButton;
     [SerializeField] Button resetButton;
 
@@ -70,7 +69,7 @@ public class UIContainer : MonoBehaviour
         bonusTicketsIcon.SetActive(gameSessionData.ticketRedemptionMode);
         logo.SetActive(!gameSessionData.ticketRedemptionMode);
         bonusTicketsText.text = gameSessionData.bonusTickets.ToString();
-        
+
     }
 
     private void Update()
@@ -101,7 +100,6 @@ public class UIContainer : MonoBehaviour
                 //Open Credit Screen
             }
         }
-
     }
 
     IEnumerator StartGame()
@@ -165,16 +163,12 @@ public class UIContainer : MonoBehaviour
     }
     private void AssignListeners()
     {
-        gameOverScreen.SetActive(false);
-        restartButton.onClick.RemoveAllListeners();
-        resetButton.onClick.RemoveAllListeners();
         resetButton.onClick.AddListener(() =>
         {
             PlayerData.ResetPlayerData();
             DataExporter.DeleteData();
             SceneManager.LoadScene(0);
         });
-        restartButton.onClick.AddListener(() => SceneManager.LoadScene(0));
         exitButton.onClick.AddListener(() => Application.Quit());
     }
 
@@ -184,6 +178,12 @@ public class UIContainer : MonoBehaviour
     }
     private void OnGameOver()
     {
-       ActivateUI(GameStates.GameOver);
+        ActivateUI(GameStates.GameOver);
+        StartCoroutine(RestartAfterDelay());
+    }
+    IEnumerator RestartAfterDelay()
+    {
+        yield return new WaitForSeconds(6);
+        SceneManager.LoadScene(0);
     }
 }

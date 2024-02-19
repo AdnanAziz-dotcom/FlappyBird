@@ -8,7 +8,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] Pipe[] pipePrefabs;
     Difficulty currentDifficulty = null;
     bool gameOver = false;
-    GameSessionData gameSessionData;
 
     private void Awake()
     {
@@ -26,7 +25,6 @@ public class GameManager : MonoBehaviour
         GameStartEvent += OnStartGame;
         DeadEvent += OnDead;
         GetUpdatedScoreEvent += OnUpdateDifficulty;
-        GameSessionDataEvent += OnGameSessionData;
     }
 
     private void OnDisable()
@@ -34,12 +32,8 @@ public class GameManager : MonoBehaviour
         GameStartEvent -= OnStartGame;
         DeadEvent -= OnDead;
         GetUpdatedScoreEvent -= OnUpdateDifficulty;
-        GameSessionDataEvent -= OnGameSessionData;
     }
-    private void OnGameSessionData(GameSessionData gameSessionData)
-    {
-        this.gameSessionData = gameSessionData;
-    }
+   
     public void OnStartGame()
     {
         StartCoroutine(SpawnPipes());

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using static EventsHandler;
 public class Bird : MonoBehaviour
 {
     [SerializeField] float jumpSpeed = 100f;
@@ -13,6 +13,7 @@ public class Bird : MonoBehaviour
     Vector3 resetPosition;
     bool passedObstacle = false;
     Animator animator;
+    GameSessionData gameSessionData;
     public enum State
     {
         WaitingToPlay,
@@ -31,15 +32,17 @@ public class Bird : MonoBehaviour
     }
     private void OnEnable()
     {
-        EventsHandler.ScoreUpdateEvent += OnPassObstacle;
-        EventsHandler.GameStartEvent += OnGameStart;
+        ScoreUpdateEvent += OnPassObstacle;
+        GameStartEvent += OnGameStart;
+        GameSessionDataEvent += OnGameSessionData;
     }
     private void OnDisable()
     {
-        EventsHandler.ScoreUpdateEvent -= OnPassObstacle;
-        EventsHandler.GameStartEvent -= OnGameStart;
+        ScoreUpdateEvent -= OnPassObstacle;
+        GameStartEvent -= OnGameStart;
+        GameSessionDataEvent -= OnGameSessionData;
     }
-
+    private void OnGameSessionData(GameSessionData gameSessionData) => this.gameSessionData = gameSessionData;
     void OnGameStart()
     {
         state = State.Playing;
@@ -70,43 +73,54 @@ public class Bird : MonoBehaviour
     }
 
     private void OnPassObstacle() => passedObstacle = true;
-    private void ResetBird()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
+
     private void Jump()
     {
         rb.velocity = Vector2.up * jumpSpeed;
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (!passedObstacle)
-        {
-            state = State.Dead;
-            StartCoroutine(WaitandReload());
-            return;
-        }
+
         if (state == State.Dead) return;
-        Instantiate(hitEffect, transform.position, hitEffect.transform.rotation, transform);
+        if (gameSessionData.enableRetry && !passedObstacle)
+            Retry();
+        else
+            StartCoroutine(WaitandFinish());
+    }
+
+
+    private void Retry()
+    {
         state = State.Dead;
-        StartCoroutine(WaitandFinish());
+        if (PlayerData.GetRetryCount() < 3)
+            StartCoroutine(WaitandReload());
+        else
+            StartCoroutine(WaitandFinish());
+
     }
 
     IEnumerator WaitandReload()
     {
-
-        EventsHandler.DeadEvent?.Invoke();
+        Debug.Log("try : " + PlayerData.GetRetryCount());
+        PlayerData.AddRetryCount();
+        DeadEvent?.Invoke();
         animator.SetTrigger("Hit");
         yield return new WaitForSeconds(1.5f);
-        ResetBird();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     IEnumerator WaitandFinish()
     {
-        EventsHandler.DeadEvent?.Invoke();
+        state = State.Dead;
+        PlayerData.ResetRetryCount();
+        Instantiate(hitEffect, transform.position, hitEffect.transform.rotation, transform);
+        DeadEvent?.Invoke();
         animator.SetTrigger("Hit");
         yield return new WaitForSeconds(1.5f);
-        EventsHandler.GameOverEvent?.Invoke();
+        GameOverEvent?.Invoke();
     }
-
+    private void OnApplicationQuit()
+    {
+        PlayerData.ResetRetryCount();
+    }
 }

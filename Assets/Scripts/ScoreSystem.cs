@@ -1,22 +1,24 @@
 using System;
 using TMPro;
 using UnityEngine;
-
+using static EventsHandler;
 public class ScoreSystem : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI scoreText;
     [SerializeField] TextMeshProUGUI finalScoreText;
+    [SerializeField] TextMeshProUGUI ticketsText;
     [SerializeField] TextMeshProUGUI averageScoreText;
 
     float score = 0;
-    
+
     //Data to be exported
     string timeStamp;
+    GameSessionData gameSessionData;
     private void Start()
     {
         scoreText.text = 0.ToString();
         finalScoreText.text = 0.ToString();
-        averageScoreText.text =PlayerData.GetAverageScore().ToString();
+        averageScoreText.text = PlayerData.GetAverageScore().ToString();
 
     }
     private void StartGame()
@@ -25,17 +27,28 @@ public class ScoreSystem : MonoBehaviour
     }
     private void OnEnable()
     {
-        EventsHandler.DeadEvent += SetScore;
-        EventsHandler.ScoreUpdateEvent += UpdateScore;
-        EventsHandler.GameStartEvent += StartGame;
+        DeadEvent += SetScore;
+        ScoreUpdateEvent += UpdateScore;
+        GameStartEvent += StartGame;
+        GameSessionDataEvent += OnGameSessionData;
+        GameOverEvent += OnGameOver;
     }
     private void OnDisable()
     {
-        EventsHandler.DeadEvent -= SetScore;
-        EventsHandler.ScoreUpdateEvent -= UpdateScore;
-        EventsHandler.GameStartEvent -= StartGame;
+        DeadEvent -= SetScore;
+        ScoreUpdateEvent -= UpdateScore;
+        GameStartEvent -= StartGame;
+        GameSessionDataEvent -= OnGameSessionData;
+        GameOverEvent -= OnGameOver;
     }
 
+    private void OnGameOver()
+    {
+      ticketsText.transform.parent.gameObject.SetActive(gameSessionData.ticketRedemptionMode);
+    }
+
+    private void OnGameSessionData(GameSessionData gameSessionData)=> this.gameSessionData = gameSessionData;
+ 
     private void UpdateScore()
     {
         score++;
@@ -43,7 +56,7 @@ public class ScoreSystem : MonoBehaviour
         finalScoreText.text = score.ToString();
         EventsHandler.GetUpdatedScoreEvent?.Invoke(score);
     }
-    
+
     private void SetScore()
     {
         PlayerData.SetPlayerScore(score);
