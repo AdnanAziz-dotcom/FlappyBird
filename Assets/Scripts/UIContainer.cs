@@ -135,6 +135,7 @@ public class UIContainer : MonoBehaviour
 
     IEnumerator StartGame()
     {
+        tryAgainLabel.SetActive(false);
         ActivateUI(GameStates.ReadyToPlay);
         startScreenObjects.GetComponent<Animator>().enabled = true;
         yield return new WaitForSeconds(3);

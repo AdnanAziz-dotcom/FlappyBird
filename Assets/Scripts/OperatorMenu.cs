@@ -1,5 +1,6 @@
 using System;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,9 +12,9 @@ public class OperatorMenu : MonoBehaviour
     [SerializeField] TMP_InputField minTickets;
     [SerializeField] TMP_InputField perTicketValue;
     [SerializeField] TMP_InputField creditsPerGame;
-    [SerializeField] Toggle freePlayMode;
-    [SerializeField] Toggle ticketRedemptionMode;
-    [SerializeField] Toggle enableRetry;
+    [SerializeField] TMP_InputField freePlayMode;
+    [SerializeField] TMP_InputField ticketRedemptionMode;
+    [SerializeField] TMP_InputField enableRetry;
     [SerializeField] TMP_InputField attractVolume;
     [SerializeField] TMP_InputField gameVolume;
     [SerializeField] Button saveButton;
@@ -35,9 +36,9 @@ public class OperatorMenu : MonoBehaviour
         minTickets.text = gameData.minTickets.ToString();
         perTicketValue.text = gameData.perTicketValue.ToString();
         creditsPerGame.text = gameData.creditsPerGame.ToString();
-        freePlayMode.isOn = gameData.freePlayMode;
-        ticketRedemptionMode.isOn = gameData.ticketRedemptionMode;
-        enableRetry.isOn = gameData.enableRetry;
+        freePlayMode.text = Convert.ToInt16(gameData.freePlayMode).ToString();
+        ticketRedemptionMode.text = Convert.ToInt16(gameData.ticketRedemptionMode).ToString();
+        enableRetry.text = Convert.ToInt16(gameData.enableRetry).ToString();
         attractVolume.text = gameData.attractVolume.ToString();
         gameVolume.text = gameData.gameVolume.ToString();
     }
@@ -62,9 +63,9 @@ public class OperatorMenu : MonoBehaviour
         gameData.minTickets = int.Parse(minTickets.text);
         gameData.perTicketValue = int.Parse(perTicketValue.text);
         gameData.creditsPerGame = int.Parse(creditsPerGame.text);
-        gameData.freePlayMode = freePlayMode.isOn;
-        gameData.ticketRedemptionMode = ticketRedemptionMode.isOn;
-        gameData.enableRetry = enableRetry.isOn;
+        gameData.freePlayMode = Convert.ToBoolean(int.Parse(freePlayMode.text));
+        gameData.ticketRedemptionMode = Convert.ToBoolean(int.Parse(ticketRedemptionMode.text));
+        gameData.enableRetry = Convert.ToBoolean(int.Parse(enableRetry.text));
         gameData.attractVolume = int.Parse(attractVolume.text);
         gameData.gameVolume = int.Parse(gameVolume.text);
         SaveSessionData();

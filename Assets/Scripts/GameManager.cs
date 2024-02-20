@@ -73,9 +73,9 @@ public class GameManager : MonoBehaviour
     }
     private void OnUpdateDifficulty(float score)
     {
-        DebugLog(currentDifficulty, "Original Difficulty");
+       // DebugLog(currentDifficulty, "Original Difficulty");
         GetUpdatedDifficultyEvent?.Invoke(currentDifficulty);
-        DebugLog(currentDifficulty, "Changed Difficulty");
+       // DebugLog(currentDifficulty, "Changed Difficulty");
     }
     void DebugLog(Difficulty currentDifficulty, string msg)
     {
