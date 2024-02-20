@@ -23,4 +23,7 @@ public class EventsHandler : MonoBehaviour
     public delegate void GetGameSessionData(GameSessionData gameSessionData);
     public static GetGameSessionData GameSessionDataEvent;
 
+    public delegate void ArduinoEventsListeners(string message);
+    public static ArduinoEventsListeners ArduinoEvent;
+
 }

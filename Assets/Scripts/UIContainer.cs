@@ -59,12 +59,14 @@ public class UIContainer : MonoBehaviour
         DeadEvent += OnBirdDead;
         GameOverEvent += OnGameOver;
         GameSessionDataEvent += OnGameSessionData;
+        ArduinoEvent += OnArduinoEventRecieved;
     }
     private void OnDisable()
     {
         DeadEvent -= OnBirdDead;
         GameOverEvent -= OnGameOver;
         GameSessionDataEvent -= OnGameSessionData;
+        ArduinoEvent -= OnArduinoEventRecieved;
     }
     private void OnGameSessionData(GameSessionData gameSessionData)
     {
@@ -89,7 +91,7 @@ public class UIContainer : MonoBehaviour
 
     private void Update()
     {
-
+        return;
         if (gameState == GameStates.Playing) return;
 
         if (gameState == GameStates.PrePlay && Input.GetKeyDown(KeyCode.O))
@@ -121,6 +123,42 @@ public class UIContainer : MonoBehaviour
         }
     }
 
+
+    private void OnArduinoEventRecieved(string message)
+    {
+        Debug.Log("Arduino Event Recieved: " + message);
+
+        if (gameState == GameStates.Playing) return;
+
+        if (gameState == GameStates.PrePlay && message == "operator")
+        { 
+            ActivateUI(GameStates.OperatorMenu);
+        }
+
+        if (gameSessionData.freePlayMode)
+        {
+            if (gameState == GameStates.PrePlay)
+            {
+                ActivateUI(GameStates.StartScreen);
+            }
+            else if (gameState == GameStates.StartScreen && message == "spacebar")
+            {
+                StartCoroutine(StartGame());
+            }
+        }
+        else
+        {
+            if (!gameData.isRetrying && message == "credit")
+            {
+                OnCreditInserted();
+            }
+            else if (gameState == GameStates.StartScreen && message == "spacebar")
+            {
+                StartCoroutine(StartGame());
+            }
+        }
+    }
+
     void OnCreditInserted()
     {
         gameData.creditCount -= 1;
@@ -129,7 +167,7 @@ public class UIContainer : MonoBehaviour
         {
             gameData.creditCount = gameData.creditsPerGame;
             ActivateUI(GameStates.StartScreen);
-           // StartCoroutine(StartGame());
+            // StartCoroutine(StartGame());
         }
     }
 

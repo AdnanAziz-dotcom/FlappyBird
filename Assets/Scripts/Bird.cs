@@ -36,6 +36,7 @@ public class Bird : MonoBehaviour
         GameStartEvent += OnGameStart;
         GameSessionDataEvent += OnGameSessionData;
         ScoreUpdateEvent += UpdateScore;
+        ArduinoEvent += OnArduinoEventRecieved;
     }
     private void OnDisable()
     {
@@ -43,6 +44,13 @@ public class Bird : MonoBehaviour
         GameStartEvent -= OnGameStart;
         GameSessionDataEvent -= OnGameSessionData;
         ScoreUpdateEvent += UpdateScore;
+        ArduinoEvent -= OnArduinoEventRecieved;
+    }
+
+    private void OnArduinoEventRecieved(string message)
+    {
+        if (message == "spacebar" && state == State.Playing)
+            Jump();
     }
 
     private void UpdateScore()
@@ -74,7 +82,7 @@ public class Bird : MonoBehaviour
             case State.Playing:
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    Jump();
+                   // Jump();
                 }
                 break;
             case State.Dead:
