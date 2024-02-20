@@ -17,6 +17,7 @@ public class UIContainer : MonoBehaviour
     [SerializeField] TextMeshProUGUI bonusTicketsText;
     [SerializeField] GameObject freePlayIcon;
     [SerializeField] GameObject insertCreditsIcon;
+    [SerializeField] TextMeshProUGUI insertCreditsText;
 
     [Header("Start Screen - Start Screen")]
     [SerializeField] GameObject startScreenObjects;
@@ -62,6 +63,7 @@ public class UIContainer : MonoBehaviour
     private void OnGameSessionData(GameSessionData gameSessionData)
     {
         this.gameSessionData = gameSessionData;
+        gameData.creditCount = gameData.creditsPerGame;
         SetUpUI();
     }
     private void SetUpUI()
@@ -71,6 +73,7 @@ public class UIContainer : MonoBehaviour
 
         freePlayIcon.SetActive(gameSessionData.freePlayMode);
         insertCreditsIcon.SetActive(!gameSessionData.freePlayMode);
+        insertCreditsText.text = gameSessionData.creditsPerGame.ToString();
         bonusTicketsIcon.SetActive(gameSessionData.ticketRedemptionMode);
         logo.SetActive(!gameSessionData.ticketRedemptionMode);
         bonusTicketsText.text = gameSessionData.bonusTickets.ToString();
@@ -100,10 +103,26 @@ public class UIContainer : MonoBehaviour
         }
         else
         {
-            if (Input.GetKeyDown(KeyCode.C))
+            if (!gameData.isRetrying && Input.GetKeyDown(KeyCode.C))
             {
-                //Open Credit Screen
+                OnCreditInserted();
             }
+            else if (gameState == GameStates.StartScreen && Input.GetKeyDown(KeyCode.Space))
+            {
+                StartCoroutine(StartGame());
+            }
+        }
+    }
+
+    void OnCreditInserted()
+    {
+        gameData.creditCount -= 1;
+        insertCreditsText.text = gameData.creditCount.ToString();
+        if (gameData.creditCount <= 0)
+        {
+            gameData.creditCount = gameData.creditsPerGame;
+            ActivateUI(GameStates.StartScreen);
+           // StartCoroutine(StartGame());
         }
     }
 

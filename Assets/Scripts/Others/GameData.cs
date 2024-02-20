@@ -20,6 +20,7 @@ public class GameData : ScriptableObject
     [Space(5), Header("In Game Data --- Do Not Change !!!")]
     public bool isRetrying;
     public int retryCount;
+    public int creditCount;
 
 
     [Header("Game Parameters --- Do Not Change !!!")]
