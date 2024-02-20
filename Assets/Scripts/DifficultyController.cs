@@ -6,12 +6,12 @@ public class DifficultyController : MonoBehaviour
     [Header("Hover Mouse for details")]
     [Tooltip("It isThe percentage difficulty added/subtracted from the current difficulty Parameters, \n 0.1f means 10% increase or decrease in the difficulty")]
     [SerializeField, Range(0.01f, 0.05f)] float baseLearningRate = 0.2f; // % value that added/subtracted from the difficulty Parameters
-    [SerializeField,Range(0.1f, 0.2f)] float multiplier = 0.1f; // % value that added/subtracted to the base learning rate, at start each time
+    //[SerializeField, Range(0.1f, 0.2f)] float multiplier = 0.1f; // % value that added/subtracted to the base learning rate, at start each time
 
 
-    [Header("Hover Mouse for details")]
-    [Tooltip("The Average score around which the player needs to stay")]
-    [SerializeField] float targetScore = 30f; //after this score, we will start increasing the difficulty
+    //[Header("Hover Mouse for details")]
+    //[Tooltip("The Average score around which the player needs to stay")]
+   // [SerializeField] float targetScore = 30f; //after this score, we will start increasing the difficulty
 
     [Header("The Upper and Lower Limit for the Pipe Position")]
     //determine upper and lower limit for the pipe position
@@ -30,12 +30,12 @@ public class DifficultyController : MonoBehaviour
     [Tooltip("Lower Value = Higher Spawning Speed,\n values are inversely proportional to difficluty, \n Lower values means higher diffuculty")]
     [SerializeField, Range(1.5f, 2.5f)] float minSpawnSpeed = 1.6f; //Higher Value means slower spawning
     [SerializeField, Range(0.5f, 1.3f)] float maxSpawnSpeed = 1.3f; //Lower Value means faster spawning
-    // with the values, for instance, the Final range for the spawning interval will be 1.2 - 1.9
+                                                                    // with the values, for instance, the Final range for the spawning interval will be 1.2 - 1.9
 
 
 
 
-   
+
     float topMaxDefault = 60;  // 90 
     float topMinDefault = 40; // 60
     float bottomMaxDefault = -40; // -60
@@ -57,16 +57,16 @@ public class DifficultyController : MonoBehaviour
 
     private Difficulty SetDifficultyParameters(float averageScore)
     {
-        baseLearningRate = PlayerData.GetBaseLearningRate() == 0 ? baseLearningRate : PlayerData.GetBaseLearningRate();
+       // baseLearningRate = PlayerData.GetBaseLearningRate() == 0 ? baseLearningRate : PlayerData.GetBaseLearningRate();
         if (averageScore == 0) return GetDefaultDifficultyData(); ;//if player is playing for the first time, then return
 
 
-        if (averageScore >= targetScore) baseLearningRate *= 1 + multiplier;
-        else baseLearningRate *= 1 - multiplier;
+        //if (averageScore >= targetScore) baseLearningRate *= 1 + multiplier;
+        //else baseLearningRate *= 1 - multiplier;
 
         //Clamp the learning rate between 0.01 and 0.05
-        if (baseLearningRate < 0.01) baseLearningRate = 0.01f;
-        if (baseLearningRate > 0.05) baseLearningRate = 0.05f;
+        //if (baseLearningRate < 0.01) baseLearningRate = 0.01f;
+        //if (baseLearningRate > 0.05) baseLearningRate = 0.05f;
 
         PlayerData.SetBaseLearningRate(baseLearningRate);
         return GetDefaultDifficultyData();
@@ -98,9 +98,9 @@ public class DifficultyController : MonoBehaviour
         void UpperPipe()
         {
             //Decrease the range of the top pipe position, upto the minimum limit, so move down by decreasing
-            if (currentDifficulty.topPipePositionRange.max > topLimitMin) 
+            if (currentDifficulty.topPipePositionRange.max > topLimitMin)
                 currentDifficulty.topPipePositionRange.max *= 1 - learningRate;
-            if (currentDifficulty.topPipePositionRange.max < topLimitMin) 
+            if (currentDifficulty.topPipePositionRange.max < topLimitMin)
                 currentDifficulty.topPipePositionRange.max = topLimitMin;
         }
 
@@ -205,23 +205,14 @@ public class Range
 
 public class PlayerData
 {
-    // Score and Total Games Data
-    public static int GetRetryCount() => PlayerPrefs.GetInt("Retry", 0);
-    public static void AddRetryCount() => PlayerPrefs.SetInt("Retry", PlayerPrefs.GetInt("Retry", 0) + 1);
-    public static void ResetRetryCount() => PlayerPrefs.SetInt("Retry", 0);
     public static void SetPlayerScore(float score) => PlayerPrefs.SetFloat("Score", PlayerPrefs.GetFloat("Score", 0) + score);
-    public static float GetPlayerScore() => PlayerPrefs.GetFloat("Score", 0);
     public static void SetPlayerGames() => PlayerPrefs.SetInt("Games", PlayerPrefs.GetInt("Games", 0) + 1);
-    public static int GetPlayerGames() => PlayerPrefs.GetInt("Games", 0);
     public static float GetAverageScore()
     {
-        float totalScore = GetPlayerScore();
-        float totalGames = GetPlayerGames();
+        float totalScore = PlayerPrefs.GetFloat("Score", 0);
+        float totalGames = PlayerPrefs.GetInt("Games", 0);
         return totalGames == 0 ? totalScore : (float)System.Math.Round(totalScore / totalGames, 2);
     }
-
-    
-
     public static void SetBaseLearningRate(float LR) => PlayerPrefs.SetFloat("LR", LR);
     public static float GetBaseLearningRate() => PlayerPrefs.GetFloat("LR", 0);
 

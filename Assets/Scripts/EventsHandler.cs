@@ -11,6 +11,9 @@ public class EventsHandler : MonoBehaviour
     public delegate void ScoreUpdate(float score);
     public static ScoreUpdate GetUpdatedScoreEvent;
 
+    public delegate int GetTickets(int score);
+    public static GetTickets GetTicketsEvent;
+
     public delegate Difficulty SetDifficulty(float avgScore);
     public static SetDifficulty SetDifficultyEvent;
 

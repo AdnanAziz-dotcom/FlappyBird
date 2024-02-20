@@ -14,6 +14,7 @@ public class Bird : MonoBehaviour
     Animator animator;
     GameSessionData gameSessionData;
     [SerializeField] GameData gameData;
+    private int score = 0;
     public enum State
     {
         WaitingToPlay,
@@ -34,12 +35,22 @@ public class Bird : MonoBehaviour
         ScoreUpdateEvent += OnPassObstacle;
         GameStartEvent += OnGameStart;
         GameSessionDataEvent += OnGameSessionData;
+        ScoreUpdateEvent += UpdateScore;
     }
     private void OnDisable()
     {
         ScoreUpdateEvent -= OnPassObstacle;
         GameStartEvent -= OnGameStart;
         GameSessionDataEvent -= OnGameSessionData;
+        ScoreUpdateEvent += UpdateScore;
+    }
+
+    private void UpdateScore()
+    {
+        score++;
+        if(score >= 100)
+            StartCoroutine(WaitandFinish());
+
     }
     private void OnGameSessionData(GameSessionData gameSessionData) => this.gameSessionData = gameSessionData;
     void OnGameStart()
@@ -91,7 +102,7 @@ public class Bird : MonoBehaviour
     private void Retry()
     {
         state = State.Dead;
-        if (PlayerData.GetRetryCount() < 3)
+        if (gameData.retryCount < 3)
             StartCoroutine(WaitandReload());
         else
             StartCoroutine(WaitandFinish());
@@ -101,8 +112,7 @@ public class Bird : MonoBehaviour
     IEnumerator WaitandReload()
     {
         gameData.isRetrying = true;
-        Debug.Log("try : " + PlayerData.GetRetryCount());
-        PlayerData.AddRetryCount();
+        gameData.retryCount++;
         DeadEvent?.Invoke();
         animator.SetTrigger("Hit");
         yield return new WaitForSeconds(1.5f);
@@ -113,7 +123,7 @@ public class Bird : MonoBehaviour
     {
         gameData.isRetrying = false;
         state = State.Dead;
-        PlayerData.ResetRetryCount();
+        gameData.retryCount = 0;
         Instantiate(hitEffect, transform.position, hitEffect.transform.rotation, transform);
         DeadEvent?.Invoke();
         animator.SetTrigger("Hit");
@@ -122,7 +132,7 @@ public class Bird : MonoBehaviour
     }
     private void OnApplicationQuit()
     {
-        PlayerData.ResetRetryCount();
+        gameData.retryCount = 0;
         gameData.isRetrying = false;
     }
 }

@@ -45,6 +45,7 @@ public class ScoreSystem : MonoBehaviour
     private void OnGameOver()
     {
       ticketsText.transform.parent.gameObject.SetActive(gameSessionData.ticketRedemptionMode);
+      ticketsText.text = GetTicketsEvent?.Invoke((int)score).ToString();
     }
 
     private void OnGameSessionData(GameSessionData gameSessionData)=> this.gameSessionData = gameSessionData;
@@ -54,7 +55,7 @@ public class ScoreSystem : MonoBehaviour
         score++;
         scoreText.text = score.ToString();
         finalScoreText.text = score.ToString();
-        EventsHandler.GetUpdatedScoreEvent?.Invoke(score);
+        GetUpdatedScoreEvent?.Invoke(score);
     }
 
     private void SetScore()
