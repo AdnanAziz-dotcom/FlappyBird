@@ -18,13 +18,13 @@ MonoBehaviour:
   perTicketValue: 5
   creditsPerGame: 3
   freePlayMode: 0
-  ticketRedemptionMode: 1
+  ticketRedemptionMode: 0
   enableRetry: 1
   attractVolume: 8
   gameVolume: 6
   isRetrying: 0
   retryCount: 0
-  creditCount: 0
+  creditCount: 3
   adjustmentFactor: 1
   gamesPlayed: 0
   totalTicketsAwarded: 0

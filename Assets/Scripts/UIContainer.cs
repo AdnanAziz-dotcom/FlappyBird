@@ -23,6 +23,8 @@ public class UIContainer : MonoBehaviour
     [SerializeField] GameObject startScreenObjects;
     [SerializeField] GameObject startScreenLogo;
     [SerializeField] GameObject startScreenInstruction;
+    [SerializeField] GameObject tryAgainLabel;
+
 
     [Header("Game Over Screen")]
     [SerializeField] GameObject gameOverScreen;
@@ -31,6 +33,10 @@ public class UIContainer : MonoBehaviour
 
     [Header("Operator Menu")]
     [SerializeField] GameObject operatorScreen;
+
+
+    [Header("In Game UIs")]
+    [SerializeField] GameObject inGameUIs;
 
     [Header("Game Data")]
     [SerializeField] GameData gameData;
@@ -77,6 +83,7 @@ public class UIContainer : MonoBehaviour
         bonusTicketsIcon.SetActive(gameSessionData.ticketRedemptionMode);
         logo.SetActive(!gameSessionData.ticketRedemptionMode);
         bonusTicketsText.text = gameSessionData.bonusTickets.ToString();
+        tryAgainLabel.SetActive(gameData.isRetrying);
 
     }
 
@@ -144,6 +151,7 @@ public class UIContainer : MonoBehaviour
             operatorScreen.SetActive(true);
             startScreen.SetActive(false);
             gameOverScreen.SetActive(false);
+            inGameUIs.SetActive(false);
         }
         else if (gm == GameStates.PrePlay)
         {
@@ -152,6 +160,7 @@ public class UIContainer : MonoBehaviour
             gameOverScreen.SetActive(false);
             prePlayObjects.SetActive(true);
             startScreenObjects.SetActive(false);
+            inGameUIs.SetActive(false);
         }
         else if (gm == GameStates.StartScreen)
         {
@@ -160,6 +169,7 @@ public class UIContainer : MonoBehaviour
             gameOverScreen.SetActive(false);
             prePlayObjects.SetActive(false);
             startScreenObjects.SetActive(true);
+            inGameUIs.SetActive(false);
         }
         else if (gm == GameStates.ReadyToPlay)
         {
@@ -169,6 +179,7 @@ public class UIContainer : MonoBehaviour
             startScreenLogo.SetActive(false);
             startScreenObjects.SetActive(true);
             startScreenInstruction.SetActive(false);
+            inGameUIs.SetActive(false);
         }
         else if (gm == GameStates.Playing)
         {
@@ -177,12 +188,14 @@ public class UIContainer : MonoBehaviour
             gameOverScreen.SetActive(false);
             startScreenObjects.SetActive(true);
             startScreenInstruction.SetActive(true);
+            inGameUIs.SetActive(true);
         }
         else if (gm == GameStates.GameOver)
         {
             operatorScreen.SetActive(false);
             startScreen.SetActive(false);
             gameOverScreen.SetActive(true);
+            inGameUIs.SetActive(false);
         }
     }
     private void AssignListeners()

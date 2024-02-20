@@ -116,7 +116,7 @@ public class Bird : MonoBehaviour
         DeadEvent?.Invoke();
         animator.SetTrigger("Hit");
         yield return new WaitForSeconds(1.5f);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        SceneManager.LoadScene(0);
     }
 
     IEnumerator WaitandFinish()
