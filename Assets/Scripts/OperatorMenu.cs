@@ -1,12 +1,11 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class OperatorMenu : MonoBehaviour
 {
+    [SerializeField] GameData gameData;
     [SerializeField] TMP_InputField bonusTickets;
     [SerializeField] TMP_InputField avgPayout;
     [SerializeField] TMP_InputField minTickets;
@@ -18,29 +17,57 @@ public class OperatorMenu : MonoBehaviour
     [SerializeField] TMP_InputField attractVolume;
     [SerializeField] TMP_InputField gameVolume;
     [SerializeField] Button saveButton;
-
     GameSessionData gameSessionData;
 
+    
     private void Start()
     {
+        PopulateFields();
         gameSessionData = new GameSessionData();
+        SaveSessionData();
         saveButton.onClick.AddListener(() => SaveData());
-        SaveData();
     }
 
+    private void PopulateFields()
+    {
+        bonusTickets.text = gameData.bonusTickets.ToString();
+        avgPayout.text = gameData.avgPayout.ToString();
+        minTickets.text = gameData.minTickets.ToString();
+        perTicketValue.text = gameData.perTicketValue.ToString();
+        creditsPerGame.text = gameData.creditsPerGame.ToString();
+        freePlayMode.isOn = gameData.freePlayMode;
+        ticketRedemptionMode.isOn = gameData.ticketRedemptionMode;
+        enableRetry.isOn = gameData.enableRetry;
+        attractVolume.text = gameData.attractVolume.ToString();
+        gameVolume.text = gameData.gameVolume.ToString();
+    }
+    private void SaveSessionData()
+    {
+        gameSessionData.bonusTickets = gameData.bonusTickets;
+        gameSessionData.avgPayout = gameData.avgPayout;
+        gameSessionData.minTickets = gameData.minTickets;
+        gameSessionData.perTicketValue = gameData.perTicketValue;
+        gameSessionData.creditsPerGame = gameData.creditsPerGame;
+        gameSessionData.freePlayMode = gameData.freePlayMode;
+        gameSessionData.ticketRedemptionMode = gameData.ticketRedemptionMode;
+        gameSessionData.enableRetry = gameData.enableRetry;
+        gameSessionData.attractVolume = gameData.attractVolume;
+        gameSessionData.gameVolume = gameData.gameVolume;
+        EventsHandler.GameSessionDataEvent?.Invoke(gameSessionData);
+    }
     private void SaveData()
     {
-        gameSessionData.bonusTickets = float.Parse(bonusTickets.text);
-        gameSessionData.avgPayout = float.Parse(avgPayout.text);
-        gameSessionData.minTickets = float.Parse(minTickets.text);
-        gameSessionData.perTicketValue = float.Parse(perTicketValue.text);
-        gameSessionData.creditsPerGame = float.Parse(creditsPerGame.text);
-        gameSessionData.freePlayMode = freePlayMode.isOn;
-        gameSessionData.ticketRedemptionMode = ticketRedemptionMode.isOn;
-        gameSessionData.enableRetry = enableRetry.isOn;
-        gameSessionData.attractVolume = float.Parse(attractVolume.text);
-        gameSessionData.gameVolume = float.Parse(gameVolume.text);
-        EventsHandler.GameSessionDataEvent?.Invoke(gameSessionData);
+        gameData.bonusTickets = int.Parse(bonusTickets.text);
+        gameData.avgPayout = int.Parse(avgPayout.text);
+        gameData.minTickets = int.Parse(minTickets.text);
+        gameData.perTicketValue = int.Parse(perTicketValue.text);
+        gameData.creditsPerGame = int.Parse(creditsPerGame.text);
+        gameData.freePlayMode = freePlayMode.isOn;
+        gameData.ticketRedemptionMode = ticketRedemptionMode.isOn;
+        gameData.enableRetry = enableRetry.isOn;
+        gameData.attractVolume = int.Parse(attractVolume.text);
+        gameData.gameVolume = int.Parse(gameVolume.text);
+        SaveSessionData();
     }
 }
 public class GameSessionData

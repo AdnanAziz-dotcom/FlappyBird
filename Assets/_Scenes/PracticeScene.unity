@@ -403,6 +403,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95fde03768910b447b536a8f823bfffe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameData: {fileID: 11400000, guid: 8f0eb70db2a336947a4d27e3c5c9982f, type: 2}
   bonusTickets: {fileID: 917028122}
   avgPayout: {fileID: 1505175283}
   minTickets: {fileID: 614904092}
@@ -9518,7 +9519,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1770194953
 RectTransform:
   m_ObjectHideFlags: 0
