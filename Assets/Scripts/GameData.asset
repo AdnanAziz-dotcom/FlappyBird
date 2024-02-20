@@ -19,6 +19,7 @@ MonoBehaviour:
   creditsPerGame: 3
   freePlayMode: 1
   ticketRedemptionMode: 1
-  enableRetry: 1
+  enableRetry: 0
   attractVolume: 8
   gameVolume: 6
+  isRetrying: 0

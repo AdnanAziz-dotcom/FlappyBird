@@ -10,10 +10,10 @@ public class Bird : MonoBehaviour
     [SerializeField] GameObject hitEffect;
     private Rigidbody2D rb;
     private State state;
-    Vector3 resetPosition;
     bool passedObstacle = false;
     Animator animator;
     GameSessionData gameSessionData;
+    [SerializeField] GameData gameData;
     public enum State
     {
         WaitingToPlay,
@@ -27,7 +27,6 @@ public class Bird : MonoBehaviour
         rb.bodyType = RigidbodyType2D.Static;
         state = State.WaitingToPlay;
         animator = GetComponent<Animator>();
-        resetPosition = transform.position;
 
     }
     private void OnEnable()
@@ -101,6 +100,7 @@ public class Bird : MonoBehaviour
 
     IEnumerator WaitandReload()
     {
+        gameData.isRetrying = true;
         Debug.Log("try : " + PlayerData.GetRetryCount());
         PlayerData.AddRetryCount();
         DeadEvent?.Invoke();
@@ -111,6 +111,7 @@ public class Bird : MonoBehaviour
 
     IEnumerator WaitandFinish()
     {
+        gameData.isRetrying = false;
         state = State.Dead;
         PlayerData.ResetRetryCount();
         Instantiate(hitEffect, transform.position, hitEffect.transform.rotation, transform);
@@ -122,5 +123,6 @@ public class Bird : MonoBehaviour
     private void OnApplicationQuit()
     {
         PlayerData.ResetRetryCount();
+        gameData.isRetrying = false;
     }
 }

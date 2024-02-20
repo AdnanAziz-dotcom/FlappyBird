@@ -16,4 +16,5 @@ public class GameData : ScriptableObject
     public int attractVolume;
     [Range(0, 10)]
     public int gameVolume;
+    public bool isRetrying;
 }

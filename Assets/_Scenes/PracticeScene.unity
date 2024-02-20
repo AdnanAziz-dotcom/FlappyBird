@@ -391,6 +391,7 @@ MonoBehaviour:
   exitButton: {fileID: 1723561253}
   resetButton: {fileID: 715292287}
   operatorScreen: {fileID: 1770194952}
+  gameData: {fileID: 11400000, guid: 8f0eb70db2a336947a4d27e3c5c9982f, type: 2}
 --- !u!114 &62835131
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12959,6 +12960,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3494703269589723584, guid: 44190163cc07a1547bdf15a45e4be425, type: 3}
+      propertyPath: gameData
+      value: 
+      objectReference: {fileID: 11400000, guid: 8f0eb70db2a336947a4d27e3c5c9982f, type: 2}
     - target: {fileID: 3494703269589723584, guid: 44190163cc07a1547bdf15a45e4be425, type: 3}
       propertyPath: hitEffect
       value: 

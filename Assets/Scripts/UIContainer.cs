@@ -31,6 +31,9 @@ public class UIContainer : MonoBehaviour
     [Header("Operator Menu")]
     [SerializeField] GameObject operatorScreen;
 
+    [Header("Game Data")]
+    [SerializeField] GameData gameData;
+
     GameSessionData gameSessionData;
     enum GameStates
     {
@@ -63,7 +66,9 @@ public class UIContainer : MonoBehaviour
     }
     private void SetUpUI()
     {
-        ActivateUI(GameStates.PrePlay);
+        if (gameData.isRetrying) ActivateUI(GameStates.StartScreen);
+        else ActivateUI(GameStates.PrePlay);
+
         freePlayIcon.SetActive(gameSessionData.freePlayMode);
         insertCreditsIcon.SetActive(!gameSessionData.freePlayMode);
         bonusTicketsIcon.SetActive(gameSessionData.ticketRedemptionMode);
