@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ParallexEffect : MonoBehaviour
@@ -8,7 +9,7 @@ public class ParallexEffect : MonoBehaviour
     [SerializeField] Transform[] backgrounds;
     [SerializeField] float threshold = -250;
     Vector3 resetPosition;
-    bool move = false;
+    bool move = false;  
     private void OnEnable()
     {
        EventsHandler.GameStartEvent += OnStartMoving;
@@ -26,6 +27,7 @@ public class ParallexEffect : MonoBehaviour
     
     private void Start()
     {
+        move = true;
         resetPosition = backgrounds[backgrounds.Length-1].position;
     }
 

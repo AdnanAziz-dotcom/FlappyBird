@@ -14,6 +14,9 @@ public class Bird : MonoBehaviour
     Animator animator;
     GameSessionData gameSessionData;
     [SerializeField] GameData gameData;
+    [SerializeField] AudioClip scoreSoundClip;
+    [SerializeField] AudioClip deadSoundClip;
+    AudioSource audioSource;
     private int score = 0;
     public enum State
     {
@@ -24,6 +27,7 @@ public class Bird : MonoBehaviour
 
     private void Awake()
     {
+        audioSource = GetComponent<AudioSource>();
         rb = GetComponent<Rigidbody2D>();
         rb.bodyType = RigidbodyType2D.Static;
         state = State.WaitingToPlay;
@@ -55,8 +59,9 @@ public class Bird : MonoBehaviour
 
     private void UpdateScore()
     {
+        audioSource.PlayOneShot(scoreSoundClip);
         score++;
-        if(score >= 100)
+        if (score >= 100)
             StartCoroutine(WaitandFinish());
 
     }
@@ -82,7 +87,7 @@ public class Bird : MonoBehaviour
             case State.Playing:
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
-                   // Jump();
+                    // Jump();
                 }
                 break;
             case State.Dead:
@@ -98,7 +103,7 @@ public class Bird : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-
+        audioSource.PlayOneShot(deadSoundClip);
         if (state == State.Dead) return;
         if (gameSessionData.enableRetry && !passedObstacle)
             Retry();

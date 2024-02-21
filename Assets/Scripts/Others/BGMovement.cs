@@ -9,6 +9,10 @@ public class BGMovement : MonoBehaviour
     [SerializeField] Renderer bgRenderer;
     bool move = false;
 
+    private void Start()
+    {
+        move = true;
+    }
     private void OnEnable()
     {
         EventsHandler.GameStartEvent += StartGame;
