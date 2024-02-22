@@ -1,5 +1,6 @@
 using System;
 using TMPro;
+using Uduino;
 using UnityEngine;
 using static EventsHandler;
 public class ScoreSystem : MonoBehaviour
@@ -46,7 +47,10 @@ public class ScoreSystem : MonoBehaviour
     {
         Debug.Log("Game Over");
         ticketsText.transform.parent.gameObject.SetActive(gameSessionData.ticketRedemptionMode);
-        ticketsText.text = GetTicketsEvent?.Invoke((int)score).ToString();
+        int ticketWon = GetTicketsEvent?.Invoke((int)score) ?? 0;
+        ticketsText.text = ticketWon.ToString();
+        int numberOfTickets = ticketWon / gameSessionData.perTicketValue;
+        UduinoManager.Instance.SendMessage("print:" + numberOfTickets);
     }
 
     private void OnGameSessionData(GameSessionData gameSessionData) => this.gameSessionData = gameSessionData;

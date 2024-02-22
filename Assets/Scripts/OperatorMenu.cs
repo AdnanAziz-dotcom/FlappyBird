@@ -73,16 +73,16 @@ public class OperatorMenu : MonoBehaviour
 }
 public class GameSessionData
 {
-    public float bonusTickets; //Number of Tickets when player successfully passes 100 pipes
-    public float avgPayout; //Average tickets the game should pay out.
-    public float minTickets; //Minimum tickets for game play regardless of play
-    public float perTicketValue; //Value of each ticket.
+    public int bonusTickets; //Number of Tickets when player successfully passes 100 pipes
+    public int avgPayout; //Average tickets the game should pay out.
+    public int minTickets; //Minimum tickets for game play regardless of play
+    public int perTicketValue; //Value of each ticket.
     public bool freePlayMode; //If set to Yes , then instead of INSERT CREDIT , FREE PLAY should flash and pressing any button will start the game
     public bool ticketRedemptionMode; //Yes will give SCORE and TICKETS Won , No will give only SCORE
     public bool enableRetry; //If set to yes , it will give 3 retries untill first obstacle is passed.
-    public float attractVolume; //Volume of main scene
-    public float gameVolume; //Volume of subsequent scenes
-    public float creditsPerGame; //Number of times credit key needs to be pressed to start game.
+    public int attractVolume; //Volume of main scene
+    public int gameVolume; //Volume of subsequent scenes
+    public int creditsPerGame; //Number of times credit key needs to be pressed to start game.
 
 }
 
