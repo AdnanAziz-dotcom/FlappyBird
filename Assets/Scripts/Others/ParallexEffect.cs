@@ -8,8 +8,11 @@ public class ParallexEffect : MonoBehaviour
     [SerializeField] float moveSpeed = 1f;
     [SerializeField] Transform[] backgrounds;
     [SerializeField] float threshold = -250;
+    Transform lastObject;
     Vector3 resetPosition;
-    bool move = false;  
+    bool move = false;
+
+    float difference;
     private void OnEnable()
     {
        EventsHandler.GameStartEvent += OnStartMoving;
@@ -24,11 +27,13 @@ public class ParallexEffect : MonoBehaviour
 
     private void OnStartMoving()=> move = true;
 
-    
     private void Start()
     {
         move = true;
         resetPosition = backgrounds[backgrounds.Length-1].position;
+        lastObject = backgrounds[backgrounds.Length-1];
+        difference =  backgrounds[0].localPosition.x - backgrounds[1].localPosition.x;
+        difference = Mathf.Abs(difference);
     }
 
     private void Update()
@@ -47,10 +52,12 @@ public class ParallexEffect : MonoBehaviour
             backgrounds[i].position += Vector3.left * moveSpeed * Time.deltaTime;
             if (backgrounds[i].position.x < threshold)
             {
-                backgrounds[i].position = new Vector3(resetPosition.x, backgrounds[i].position.y, backgrounds[i].position.z);
+                Vector3 newPos = lastObject.position;
+                newPos.x += difference;
+                backgrounds[i].position = newPos;
+                lastObject = backgrounds[i];
             }
         }
-        
     }
 
     private void SetSpeed()
