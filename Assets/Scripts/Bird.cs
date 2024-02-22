@@ -48,7 +48,7 @@ public class Bird : MonoBehaviour
         ScoreUpdateEvent -= OnPassObstacle;
         GameStartEvent -= OnGameStart;
         GameSessionDataEvent -= OnGameSessionData;
-        ScoreUpdateEvent += UpdateScore;
+        ScoreUpdateEvent -= UpdateScore;
         ArduinoEvent -= OnArduinoEventRecieved;
         GetGameDataEvent -= OnGetGameData;
     }
@@ -67,6 +67,7 @@ public class Bird : MonoBehaviour
             audioSource.Play();
         }
         score++;
+        Debug.Log("Score: " + score);
         if (score >= 100)
             StartCoroutine(WaitandFinish());
 

@@ -21,7 +21,7 @@ MonoBehaviour:
   ticketRedemptionMode: 0
   enableRetry: 0
   attractVolume: 1
-  gameVolume: 4
+  gameVolume: 3
   isRetrying: 0
   retryCount: 0
   creditCount: 3

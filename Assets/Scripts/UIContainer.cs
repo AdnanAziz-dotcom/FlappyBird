@@ -86,7 +86,7 @@ public class UIContainer : MonoBehaviour
 
         freePlayIcon.SetActive(gameSessionData.freePlayMode);
         insertCreditsIcon.SetActive(!gameSessionData.freePlayMode);
-        insertCreditsText.text = gameSessionData.creditsPerGame + "/" + gameSessionData.creditsPerGame;
+        insertCreditsText.text = 1 + "/" + gameSessionData.creditsPerGame;
         bonusTicketsIcon.SetActive(gameSessionData.ticketRedemptionMode);
         logo.SetActive(!gameSessionData.ticketRedemptionMode);
         bonusTicketsText.text = gameSessionData.bonusTickets.ToString();
@@ -167,13 +167,32 @@ public class UIContainer : MonoBehaviour
     void OnCreditInserted()
     {
         gameData.creditCount -= 1;
-        insertCreditsText.text = gameData.creditCount + "/" + gameSessionData.creditsPerGame;
+        SetCreditCountText(gameData.creditCount);
         if (gameData.creditCount <= 0)
         {
             gameData.creditCount = gameData.creditsPerGame;
             ActivateUI(GameStates.StartScreen);
             // StartCoroutine(StartGame());
         }
+    }
+
+    void SetCreditCountText(int cc)
+    {
+        switch (cc)
+        {
+            case 1:
+
+                insertCreditsText.text = 3 + "/" + gameSessionData.creditsPerGame;
+                break;
+            case 2:
+
+                insertCreditsText.text = 2 + "/" + gameSessionData.creditsPerGame;
+                break;
+            case 3:
+                insertCreditsText.text = 1 + "/" + gameSessionData.creditsPerGame;
+                break;
+        }
+
     }
 
     IEnumerator StartGame()

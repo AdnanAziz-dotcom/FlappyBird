@@ -32,15 +32,15 @@ public class GameData : ScriptableObject
     {
         DataForJSON dataForJSON = new DataForJSON(gameData);
         string jsonData = JsonUtility.ToJson(dataForJSON);
-        PlayerPrefs.SetString("GameData", jsonData);
+        PlayerPrefs.SetString("GameData1", jsonData);
         dataForJSON.GetDeserializedData(dataForJSON, gameData); //update current references as well
     }
 
     public void LoadGameData(GameData gameData)
     {
-        if (PlayerPrefs.HasKey("GameData"))
+        if (PlayerPrefs.HasKey("GameData1"))
         {
-            string jsonData = PlayerPrefs.GetString("GameData");
+            string jsonData = PlayerPrefs.GetString("GameData1");
             DataForJSON dataForJSON = JsonUtility.FromJson<DataForJSON>(jsonData);
             dataForJSON.GetDeserializedData(dataForJSON, gameData);
         }

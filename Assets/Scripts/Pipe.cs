@@ -20,6 +20,7 @@ public class Pipe : MonoBehaviour
     private void OnDisable()
     {
         EventsHandler.DeadEvent -= GameOver;
+        Destroy(this.gameObject);
     }
     void GameOver() => isGameOver = true;
     
@@ -44,5 +45,7 @@ public class Pipe : MonoBehaviour
         EventsHandler.ScoreUpdateEvent?.Invoke();
         Destroy(this.gameObject);
     }
+
+    
 }
 
