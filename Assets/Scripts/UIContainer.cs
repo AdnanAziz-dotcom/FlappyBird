@@ -38,8 +38,8 @@ public class UIContainer : MonoBehaviour
     [Header("In Game UIs")]
     [SerializeField] GameObject inGameUIs;
 
-    [Header("Game Data")]
-    [SerializeField] GameData gameData;
+
+    GameData gameData;
 
     GameSessionData gameSessionData;
     enum GameStates
@@ -60,6 +60,7 @@ public class UIContainer : MonoBehaviour
         GameOverEvent += OnGameOver;
         GameSessionDataEvent += OnGameSessionData;
         ArduinoEvent += OnArduinoEventRecieved;
+        GetGameDataEvent += OnGetGameData;
     }
     private void OnDisable()
     {
@@ -67,7 +68,11 @@ public class UIContainer : MonoBehaviour
         GameOverEvent -= OnGameOver;
         GameSessionDataEvent -= OnGameSessionData;
         ArduinoEvent -= OnArduinoEventRecieved;
+        GetGameDataEvent -= OnGetGameData;
     }
+
+    private void OnGetGameData(GameData gd) => gameData = gd;
+
     private void OnGameSessionData(GameSessionData gameSessionData)
     {
         this.gameSessionData = gameSessionData;

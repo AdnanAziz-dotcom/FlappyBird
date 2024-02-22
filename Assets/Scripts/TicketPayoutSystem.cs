@@ -1,30 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static EventsHandler;
 
 public class TicketPayoutSystem : MonoBehaviour
 {
-    [SerializeField] GameData gameData;
+    GameData gameData;
     [SerializeField] int MaxScore = 100;
 
     private void OnEnable()
     {
-        EventsHandler.GetTicketsEvent += CalculateTickets;
+        GetTicketsEvent += CalculateTickets;
+        GetGameDataEvent += OnGetGameData;
     }
 
     private void OnDisable()
     {
-        EventsHandler.GetTicketsEvent -= CalculateTickets;
+        GetTicketsEvent -= CalculateTickets;
+        GetGameDataEvent -= OnGetGameData;
     }
+    private void OnGetGameData(GameData gd) => gameData = gd;
     public int CalculateTickets(int score)
     {
         float baseTickets = (score / (float)MaxScore) * gameData.avgPayout * gameData.adjustmentFactor;
+        Debug.Log("Before Round OFF : " + baseTickets);
         int tickets = Mathf.RoundToInt(baseTickets);
 
         if (score >= MaxScore) // if level completed //// or maximum score is reached
             tickets += gameData.bonusTickets;
 
-        AdjustAdjustmentFactor(tickets);
+        AdjustAdjustmentFactor(tickets);;
         return tickets;
     }
 

@@ -13,10 +13,10 @@ public class Bird : MonoBehaviour
     bool passedObstacle = false;
     Animator animator;
     GameSessionData gameSessionData;
-    [SerializeField] GameData gameData;
+    GameData gameData;
     [SerializeField] AudioClip scoreSoundClip;
     [SerializeField] AudioClip deadSoundClip;
-    AudioSource audioSource;
+    [SerializeField] AudioSource audioSource;
     private int score = 0;
     public enum State
     {
@@ -41,6 +41,7 @@ public class Bird : MonoBehaviour
         GameSessionDataEvent += OnGameSessionData;
         ScoreUpdateEvent += UpdateScore;
         ArduinoEvent += OnArduinoEventRecieved;
+        GetGameDataEvent += OnGetGameData;
     }
     private void OnDisable()
     {
@@ -49,8 +50,9 @@ public class Bird : MonoBehaviour
         GameSessionDataEvent -= OnGameSessionData;
         ScoreUpdateEvent += UpdateScore;
         ArduinoEvent -= OnArduinoEventRecieved;
+        GetGameDataEvent -= OnGetGameData;
     }
-
+    private void OnGetGameData(GameData gd) => gameData = gd;
     private void OnArduinoEventRecieved(string message)
     {
         if (message == "spacebar" && state == State.Playing)
@@ -59,7 +61,11 @@ public class Bird : MonoBehaviour
 
     private void UpdateScore()
     {
-        audioSource.PlayOneShot(scoreSoundClip);
+        if (audioSource)
+        {
+            audioSource.clip = scoreSoundClip;
+            audioSource.Play();
+        }
         score++;
         if (score >= 100)
             StartCoroutine(WaitandFinish());
@@ -103,12 +109,16 @@ public class Bird : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        audioSource.PlayOneShot(deadSoundClip);
         if (state == State.Dead) return;
         if (gameSessionData.enableRetry && !passedObstacle)
             Retry();
         else
             StartCoroutine(WaitandFinish());
+        if (audioSource)
+        {
+            audioSource.clip = deadSoundClip;
+            audioSource.Play();
+        }
     }
 
 

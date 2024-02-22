@@ -15,6 +15,7 @@ public class ScoreSystem : MonoBehaviour
     //Data to be exported
     string timeStamp;
     GameSessionData gameSessionData;
+    GameData gameData;
     private void Start()
     {
         scoreText.text = 0.ToString();
@@ -33,6 +34,7 @@ public class ScoreSystem : MonoBehaviour
         GameStartEvent += StartGame;
         GameSessionDataEvent += OnGameSessionData;
         GameOverEvent += OnGameOver;
+        GetGameDataEvent += OnGetGameData;
     }
     private void OnDisable()
     {
@@ -41,16 +43,24 @@ public class ScoreSystem : MonoBehaviour
         GameStartEvent -= StartGame;
         GameSessionDataEvent -= OnGameSessionData;
         GameOverEvent -= OnGameOver;
+        GetGameDataEvent -= OnGetGameData;
     }
+
+    private void OnGetGameData(GameData gd) => gameData = gd;
 
     private void OnGameOver()
     {
         Debug.Log("Game Over");
         ticketsText.transform.parent.gameObject.SetActive(gameSessionData.ticketRedemptionMode);
-        int ticketWon = GetTicketsEvent?.Invoke((int)score) ?? 0;
-        ticketsText.text = ticketWon.ToString();
-        int numberOfTickets = ticketWon / gameSessionData.perTicketValue;
-        UduinoManager.Instance.SendMessage("print:" + numberOfTickets);
+        if (gameSessionData.ticketRedemptionMode)
+        { 
+            // only come here if ticket redemption mode is enabled
+            int ticketWon = GetTicketsEvent?.Invoke((int)score) ?? 0; // Ticket Calculation algorithm
+            ticketsText.text = ticketWon.ToString();
+            int numberOfTickets = ticketWon / gameSessionData.perTicketValue;
+            UduinoManager.Instance.SendMessage("TICKETS=" + numberOfTickets); // Send tickets to the Arduino
+        }
+        gameData.SaveGameData(gameData);
     }
 
     private void OnGameSessionData(GameSessionData gameSessionData) => this.gameSessionData = gameSessionData;

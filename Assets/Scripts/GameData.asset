@@ -12,19 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 411a714a66dc35f4989493e5abbf2db5, type: 3}
   m_Name: GameData
   m_EditorClassIdentifier: 
-  bonusTickets: 100
+  bonusTickets: 80
   avgPayout: 30
-  minTickets: 10
+  minTickets: 30
   perTicketValue: 5
   creditsPerGame: 3
-  freePlayMode: 1
-  ticketRedemptionMode: 1
-  enableRetry: 1
-  attractVolume: 8
-  gameVolume: 6
+  freePlayMode: 0
+  ticketRedemptionMode: 0
+  enableRetry: 0
+  attractVolume: 1
+  gameVolume: 4
   isRetrying: 0
   retryCount: 0
   creditCount: 3
-  adjustmentFactor: 1.05
-  gamesPlayed: 1
-  totalTicketsAwarded: 1
+  adjustmentFactor: 1
+  gamesPlayed: 0
+  totalTicketsAwarded: 0

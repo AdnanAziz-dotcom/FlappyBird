@@ -32,7 +32,7 @@ public class Pipe : MonoBehaviour
             scoreUpdated = true;
             EventsHandler.ScoreUpdateEvent?.Invoke();
         }
-        if (transform.position.x < -100)
+        if (transform.position.x < -205)
         {
             Destroy(this.gameObject);
         }

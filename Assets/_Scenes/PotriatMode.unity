@@ -491,7 +491,6 @@ MonoBehaviour:
   resetButton: {fileID: 715292287}
   operatorScreen: {fileID: 1770194952}
   inGameUIs: {fileID: 1209296029}
-  gameData: {fileID: 11400000, guid: 8f0eb70db2a336947a4d27e3c5c9982f, type: 2}
 --- !u!114 &62835131
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7875,8 +7874,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_audioClip: {fileID: 8300000, guid: b3325d3ee5ec80a498c86a3335b2f3fd, type: 3}
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -13674,7 +13673,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb2887438908ba94e95ab8277adfc064, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameData: {fileID: 11400000, guid: 8f0eb70db2a336947a4d27e3c5c9982f, type: 2}
   MaxScore: 100
 --- !u!4 &2071840392
 Transform:
@@ -14550,6 +14548,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3494703269589723584, guid: 44190163cc07a1547bdf15a45e4be425, type: 3}
+      propertyPath: audioSource
+      value: 
+      objectReference: {fileID: 1220279660}
     - target: {fileID: 3494703269589723584, guid: 44190163cc07a1547bdf15a45e4be425, type: 3}
       propertyPath: deadSoundClip
       value: 
