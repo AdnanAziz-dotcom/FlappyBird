@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/_Scenes/PracticeScene.unity
+    path: Assets/_Scenes/PotriatMode.unity
     guid: 50a3d491d14d3304d93a99b0e6555006
   m_configObjects: {}

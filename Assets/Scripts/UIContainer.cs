@@ -81,7 +81,7 @@ public class UIContainer : MonoBehaviour
 
         freePlayIcon.SetActive(gameSessionData.freePlayMode);
         insertCreditsIcon.SetActive(!gameSessionData.freePlayMode);
-        insertCreditsText.text = gameSessionData.creditsPerGame.ToString();
+        insertCreditsText.text = gameSessionData.creditsPerGame + "/" + gameSessionData.creditsPerGame;
         bonusTicketsIcon.SetActive(gameSessionData.ticketRedemptionMode);
         logo.SetActive(!gameSessionData.ticketRedemptionMode);
         bonusTicketsText.text = gameSessionData.bonusTickets.ToString();
@@ -131,7 +131,7 @@ public class UIContainer : MonoBehaviour
         if (gameState == GameStates.Playing) return;
 
         if (gameState == GameStates.PrePlay && message == "operator")
-        { 
+        {
             ActivateUI(GameStates.OperatorMenu);
         }
 
@@ -162,7 +162,7 @@ public class UIContainer : MonoBehaviour
     void OnCreditInserted()
     {
         gameData.creditCount -= 1;
-        insertCreditsText.text = gameData.creditCount.ToString();
+        insertCreditsText.text = gameData.creditCount + "/" + gameSessionData.creditsPerGame;
         if (gameData.creditCount <= 0)
         {
             gameData.creditCount = gameData.creditsPerGame;

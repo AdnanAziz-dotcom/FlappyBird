@@ -21,8 +21,8 @@ public class AudioController : MonoBehaviour
 
     private void OnGameSessionData(GameSessionData gameSessionData)
     {
-        attractMusic.volume = Mathf.Clamp((gameSessionData.attractVolume/10), 0, 1);
-        gameMusic.volume = Mathf.Clamp((gameSessionData.gameVolume/10), 0, 1);
+        attractMusic.volume = Mathf.Clamp((float)gameSessionData.attractVolume / 10, 0, 1);
+        gameMusic.volume = Mathf.Clamp((float)gameSessionData.gameVolume / 10, 0, 1);
         if (!attractMusic.isPlaying) attractMusic.Play();
     }
 
