@@ -29,7 +29,7 @@ public class TicketPayoutSystem : MonoBehaviour
         if (score >= MaxScore) // if level completed //// or maximum score is reached
             tickets += gameData.bonusTickets;
 
-        AdjustAdjustmentFactor(tickets);;
+        AdjustAdjustmentFactor(tickets); // adjust TicketPayoutSystem adjustment factor for future payouts
         return tickets;
     }
 

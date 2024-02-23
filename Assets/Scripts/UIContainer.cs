@@ -89,7 +89,7 @@ public class UIContainer : MonoBehaviour
         insertCreditsText.text = 1 + "/" + gameSessionData.creditsPerGame;
         bonusTicketsIcon.SetActive(gameSessionData.ticketRedemptionMode);
         logo.SetActive(!gameSessionData.ticketRedemptionMode);
-        bonusTicketsText.text = gameSessionData.bonusTickets.ToString();
+        bonusTicketsText.text = gameSessionData.bonusTickets+ " Tickets";
         tryAgainLabel.SetActive(gameData.isRetrying);
 
     }
