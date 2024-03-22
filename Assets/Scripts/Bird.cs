@@ -3,16 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using static EventsHandler;
 public class Bird : MonoBehaviour
 {
     [SerializeField] float jumpSpeed = 100f;
     [SerializeField] GameObject hitEffect;
     private Rigidbody2D rb;
     private State state;
-     Vector3 resetPosition;
     bool passedObstacle = false;
     Animator animator;
+    GameSessionData gameSessionData;
+    GameData gameData;
+    [SerializeField] AudioClip scoreSoundClip;
+    [SerializeField] AudioClip deadSoundClip;
+    [SerializeField] AudioSource audioSource;
+    private int score = 0;
     public enum State
     {
         WaitingToPlay,
@@ -22,20 +27,58 @@ public class Bird : MonoBehaviour
 
     private void Awake()
     {
+        audioSource = GetComponent<AudioSource>();
         rb = GetComponent<Rigidbody2D>();
         rb.bodyType = RigidbodyType2D.Static;
         state = State.WaitingToPlay;
         animator = GetComponent<Animator>();
-        resetPosition = transform.position;
 
     }
     private void OnEnable()
     {
-        EventsHandler.OnScoreUpdate += PassObstacle;
+        ScoreUpdateEvent += OnPassObstacle;
+        GameStartEvent += OnGameStart;
+        GameSessionDataEvent += OnGameSessionData;
+        ScoreUpdateEvent += UpdateScore;
+        ArduinoEvent += OnArduinoEventRecieved;
+        GetGameDataEvent += OnGetGameData;
     }
     private void OnDisable()
     {
-        EventsHandler.OnScoreUpdate -= PassObstacle;
+        ScoreUpdateEvent -= OnPassObstacle;
+        GameStartEvent -= OnGameStart;
+        GameSessionDataEvent -= OnGameSessionData;
+        ScoreUpdateEvent -= UpdateScore;
+        ArduinoEvent -= OnArduinoEventRecieved;
+        GetGameDataEvent -= OnGetGameData;
+    }
+    private void OnGetGameData(GameData gd) => gameData = gd;
+    private void OnArduinoEventRecieved(string message)
+    {
+        if (message == "spacebar" && state == State.Playing)
+            Jump();
+    }
+
+    private void UpdateScore()
+    {
+        if (audioSource)
+        {
+            audioSource.clip = scoreSoundClip;
+            audioSource.Play();
+        }
+        score++;
+        Debug.Log("Score: " + score);
+        if (score >= 100)
+            StartCoroutine(WaitandFinish());
+
+    }
+    private void OnGameSessionData(GameSessionData gameSessionData) => this.gameSessionData = gameSessionData;
+    void OnGameStart()
+    {
+        state = State.Playing;
+        rb.bodyType = RigidbodyType2D.Dynamic;
+        Jump();
+        animator.SetTrigger("Fly");
     }
     private void Update()
     {
@@ -44,17 +87,14 @@ public class Bird : MonoBehaviour
             case State.WaitingToPlay:
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    EventsHandler.OnGameStart?.Invoke();
-                    state = State.Playing;
-                    rb.bodyType = RigidbodyType2D.Dynamic;
-                    Jump();
-                    animator.SetTrigger("Fly");
+                    //EventsHandler.GameStartEvent?.Invoke();
+                    //OnGameStart();
                 }
                 break;
             case State.Playing:
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    Jump();
+                    // Jump();
                 }
                 break;
             case State.Dead:
@@ -62,39 +102,61 @@ public class Bird : MonoBehaviour
         }
     }
 
-    private void PassObstacle() => passedObstacle = true;
-    private void ResetBird()
-    {
-        transform.position = resetPosition;
-    }
+    private void OnPassObstacle() => passedObstacle = true;
+
     private void Jump()
     {
         rb.velocity = Vector2.up * jumpSpeed;
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (!passedObstacle)
-        {
-            if (collision.gameObject.CompareTag("Pipe"))
-            {
-                collision.gameObject.GetComponent<Pipe>().FirstPipe();
-            }
-            ResetBird();
-            return;
-        }
         if (state == State.Dead) return;
-        Instantiate(hitEffect,transform.position, hitEffect.transform.rotation, transform);
+        if (gameSessionData.enableRetry && !passedObstacle)
+            Retry();
+        else
+            StartCoroutine(WaitandFinish());
+        if (audioSource)
+        {
+            audioSource.clip = deadSoundClip;
+            audioSource.Play();
+        }
+    }
+
+
+    private void Retry()
+    {
         state = State.Dead;
-        StartCoroutine(WaitandFinish());
+        if (gameData.retryCount < 3)
+            StartCoroutine(WaitandReload());
+        else
+            StartCoroutine(WaitandFinish());
+
+    }
+
+    IEnumerator WaitandReload()
+    {
+        gameData.isRetrying = true;
+        gameData.retryCount++;
+        DeadEvent?.Invoke();
+        animator.SetTrigger("Hit");
+        yield return new WaitForSeconds(1.5f);
+        SceneManager.LoadScene(0);
     }
 
     IEnumerator WaitandFinish()
     {
-
-        EventsHandler.OnDead?.Invoke();
+        gameData.isRetrying = false;
+        state = State.Dead;
+        gameData.retryCount = 0;
+        Instantiate(hitEffect, transform.position, hitEffect.transform.rotation, transform);
+        DeadEvent?.Invoke();
         animator.SetTrigger("Hit");
         yield return new WaitForSeconds(1.5f);
-        EventsHandler.OnGameOver?.Invoke();
+        GameOverEvent?.Invoke();
     }
-
+    private void OnApplicationQuit()
+    {
+        gameData.retryCount = 0;
+        gameData.isRetrying = false;
+    }
 }
